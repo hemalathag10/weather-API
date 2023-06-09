@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather Web App</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Electrolize&display=swap');
+
+*{
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: linear-gradient(to bottom, rgba(242, 239, 239, 0.15) 0%, rgba(230, 228, 228, 0.15) 100%), radial-gradient(at top center, rgba(255,255,255,0.40) 0%, rgba(0,0,0,0.40) 120%) #989898;
+    background-blend-mode: multiply,multiply;
+    font-family: "Open Sans", sans-serif;
+}
+
+/*styling card*/
+.card-box {
+    background-image: linear-gradient(-20deg, #785af0 0%, #e3eaec 100%);
+    color: white;
+    padding: 2em;
+    border-radius: 30px;
+    width: 600px;
+    margin: 1em;
+    box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px;
+}
+
+.search_icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.button_icon {
+    margin: 0.5em;
+    border: none;
+    height: 44px;
+    width: 52px;
+    font-size: 20px;
+    outline: none;
+    color: black;
+    background: linear-gradient(to bottom, #D5DEE7 0%, #E8EBF2 50%, #E2E7ED 100%), linear-gradient(to bottom, rgba(0,0,0,0.02) 50%, rgba(255,255,255,0.02) 61%, rgba(0,0,0,0.02) 73%), linear-gradient(33deg, rgba(255,255,255,0.20) 0%, rgba(0,0,0,0.20) 100%);
+    background-blend-mode: normal,color-burn;
+    cursor: pointer;
+    transition: 0.2s ease-in-out;
+}
+
+input.search-bar {
+    outline: none;
+    padding: 0.4em 1em;
+    color: black;
+    font-family: inherit;
+    font-size: 22px;
+    width: 520px;
+    height: 43px;
+}
+
+/*Styling placeholder*/
+input.search-bar::placeholder {
+    color: gray;
+}
+
+button:hover {
+    background: black;
+    color: white;
+}
+
+.wheather {
+    width: 100vh;
+    flex-wrap: wrap;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.city {
+    font-size: 55px;
+    text-align: center;
+    font-family: 'Electrolize', sans-serif;
+}
+
+.wheather img {
+    margin-left: 130px;
+    height: 140px;
+    width: 170px;
+}
+
+.description {
+    font-size: 30px;
+    font-weight: bold;
+}
+
+.day {
+    display: flex;
+    font-size: 20px;
+}
+    </style>
+
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+          <div class="col-sm-12 mx-auto">
+            <div class="card-box mx-auto">
+        <div class="search_icon">
+          <input type="text" class="search-bar" placeholder="Enter Location" id="searchTxt" style="font-size: small; border-radius: 8px;border:#E8EBF2"/> &nbsp;or&nbsp;
+
+          <button class="button_icon" onclick="getdata()" style="height:39px; border-radius: 8px;">
+            <i class="bi bi-search" ></i>
+          </button>
+        </div>
+      </div>
+      <div class="card-box mx-auto">
+        <div class="weather">
+          <div class="city" id="location">Your Location</div>
+          
+          <hr>
+          <div class="day" id="locationParts"><i class="bi bi-geo-alt"></i>&nbspLocation</div>
+          <div class="day">
+            <p id="dateTime"><i class="bi bi-calendar"></i> &nbspDateTime</p>
+            <p>&nbsp|&nbsp</p>
+            <p id="weekDay">Monday</p>
+          </div>
+          <div class="wheather">
+            <h1 class="temp" id="temperatureC">30°C</h1>
+            <h1>&nbsp|&nbsp</h1>
+            <h1 id="temperatureF">73°F</h1>
+            <img src="https://cdn.iconscout.com/icon/free/png-256/cloudy-weather-11-1147979.png" alt="" class="icon" id="weatherIcon" />
+          </div>
+          <div class="description" id="txtWord">Cloudy</div>
+          <div class="humidity" id="humidity">Humidity: 60%</div>
+          <div class="precipitation" id="precipitation">Precipitation: 4%</div>
+          <div class="wind" id="wind">Wind Speed: 6.2 km/h</div>
+        </div>
+      </div>
+          </div>
+          <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa" crossorigin="anonymous"></script>
+          <script>
+            async function getdata() {
+    var inputVal = document.getElementById("searchTxt").value;
+
+    const res = await fetch(
+        "https://weatherapi-com.p.rapidapi.com/current.json?q=q=" + inputVal, {
+            method: "GET",
+            headers: {
+                "x-rapidapi-host": "weatherapi-com.p.rapidapi.com",
+                "x-rapidapi-key": "4f8234a62amsh42185b0b78f249cp12e57ajsnb401d01fcbbf",
+            },
+        }
+    );
+    getWeekDay();
+    const data = await res.json();
+    document.getElementById("location").innerText = data.location.name;
+    document.getElementById("locationParts").innerHTML = "<i class='bi bi-geo-alt'></i> " +
+        data.location.region + " , " + data.location.country;
+    document.getElementById("dateTime").innerHTML = "<i class='bi bi-calendar'></i> " +
+        data.location.localtime.substr(0, 10);
+    document.getElementById("txtWord").innerText = data.current.condition.text;
+    document.getElementById("humidity").innerText =
+        "Humidity: " + data.current.humidity + "%";
+    document.getElementById("precipitation").innerText =
+        "Precipitation: " + data.current.precip_mm + "%";
+    document.getElementById("wind").innerText =
+        "Wind: " + data.current.wind_kph + "km/h";
+    document.getElementById("temperatureC").innerText =
+        data.current.temp_c + " °C";
+    document.getElementById("temperatureF").innerText =
+        data.current.temp_f + " °F";
+    document.getElementById("weatherIcon").src =
+        "https:" + data.current.condition.icon;
+}
+
+function getWeekDay() {
+    const weekday = [
+        "Sunday",
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday",
+        "Saturday",
+    ];
+    const d = new Date();
+    let day = weekday[d.getDay()];
+    document.getElementById("weekDay").innerText = day;
+}
+
+
+
+locationBtn = inputPart.querySelector("button"),
+weatherPart = wrapper.querySelector(".weather-part"),
+wIcon = weatherPart.querySelector("img"),
+arrowBack = wrapper.querySelector("header i");
+let api;
+inputField.addEventListener("keyup", e =>{
+    if(e.key == "Enter" && inputField.value != ""){
+        requestApi(inputField.value);
+    }
+});
+locationBtn.addEventListener("click", () =>{
+    if(navigator.geolocation){
+        navigator.geolocation.getCurrentPosition(onSuccess, onError);
+    }else{
+        alert("Your browser not support geolocation api");
+    }
+});
+function requestApi(city){
+    api = `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=your_api_key`;
+    fetchData();
+}
+function onSuccess(position){
+    const {latitude, longitude} = position.coords;
+    api = `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&units=metric&appid=your_api_key`;
+    fetchData();
+}
+function onError(error){
+    infoTxt.innerText = error.message;
+    infoTxt.classList.add("error");
+}
+function fetchData(){
+    infoTxt.innerText = "Getting weather details...";
+    infoTxt.classList.add("pending");
+    fetch(api).then(res => res.json()).then(result => weatherDetails(result)).catch(() =>{
+        infoTxt.innerText = "Something went wrong";
+        infoTxt.classList.replace("pending", "error");
+    });
+}
+function weatherDetails(info){
+    if(info.cod == "404"){
+        infoTxt.classList.replace("pending", "error");
+        infoTxt.innerText = `${inputField.value} isn't a valid city name`;
+    }else{
+        const city = info.name;
+        const country = info.sys.country;
+        const {description, id} = info.weather[0];
+        const {temp, feels_like, humidity} = info.main;
+        if(id == 800){
+            wIcon.src = "icons/clear.svg";
+        }else if(id >= 200 && id <= 232){
+            wIcon.src = "icons/storm.svg";  
+        }else if(id >= 600 && id <= 622){
+            wIcon.src = "icons/snow.svg";
+        }else if(id >= 701 && id <= 781){
+            wIcon.src = "icons/haze.svg";
+        }else if(id >= 801 && id <= 804){
+            wIcon.src = "icons/cloud.svg";
+        }else if((id >= 500 && id <= 531) || (id >= 300 && id <= 321)){
+            wIcon.src = "icons/rain.svg";
+        }
+        
+        weatherPart.querySelector(".temp .numb").innerText = Math.floor(temp);
+        weatherPart.querySelector(".weather").innerText = description;
+        weatherPart.querySelector(".location span").innerText = `${city}, ${country}`;
+        weatherPart.querySelector(".temp .numb-2").innerText = Math.floor(feels_like);
+        weatherPart.querySelector(".humidity span").innerText = `${humidity}%`;
+        infoTxt.classList.remove("pending", "error");
+        infoTxt.innerText = "";
+        inputField.value = "";
+        wrapper.classList.add("active");
+    }
+}
+arrowBack.addEventListener("click", ()=>{
+    wrapper.classList.remove("active");
+});
+          </script>
+</body>
+</html>
